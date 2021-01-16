@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ads of the user<%= '-' + kor.username %></title>
+    <link rel="icon" href="/slike/logo.jpg" type="image/gif" sizes="16x16">
+</head>
+
+<body>
+    <%- include("header") %>
+    <%- include("pretraga") %>
+    <% if(typeof korisnik != 'undefined' && korisnik != null) { %>
+
+    <div class="text-center col-md-6 mx-auto rounded" style="background-color: rgba(255, 255, 255, 0.6);">
+        <% if(korisnik.username != kor.username){ %>
+        <%if(korisnik.role == 'admin') {%>
+        <a class=" btn btn-danger btn-lg" href="/admin/obrisiKorisnika/<%= kor.username %>">Delete user</a>
+        <%}%>
+    <p class="h4">Korisnik: <%= kor.username %></p>
+        <p class="h4">Tel: <%= kor.brojTel %></p>
+        <a class=" btn btn-info btn-lg" href="/inbox/?za=<%= kor.username %>">Send message to the user</a>
+        <% } %>
+        <% } else { %>
+        <div class="text-center col-md-6 mx-auto rounded"  style="background-color: rgba(255, 255, 255, 0.6);">
+            <p class="h4">User: <%= kor.username %></p>
+            <p class="h4">Tel: <%= kor.brojTel %></p>
+
+            <% } %>
+            <% if(typeof oglasi != 'undefined' && oglasi != null && oglasi.length>0) { %>
+
+            <p>
+                <span class="text-primary font-weight-bold h3">Likes</span>
+                <span class="h3"> - </span>
+                <span class="text-danger font-weight-bold h3">Dislikes</span>
+            </p>
+
+            <p id="brojLajkovaDislajkova">
+                <span class="text-primary font-weight-bold h3"><%=brojLajkova%></span>
+                <span class="h3"> : </span>
+                <span class="text-danger font-weight-bold h3"><%=brojDislajkova%></span>
+            </p>
+
+            <% } %>
+            <% if(typeof korisnik != 'undefined' && korisnik != null && korisnik.username == kor.username) { %>
+            <a class="btn btn-success btn-lg" href="/noviOglas">New ad</a>
+            <%}%>
+    </div>
+    
+
+    <hr class="bg-dark">
+    </div>
+    <div class="container">
+        <div class="oglasi row">
+
+            <% if(typeof oglasi != 'undefined' && oglasi != null && oglasi.length > 0) { %>
+            <% var i = 0; %>
+            <% for(let oglas of oglasi){ %>
+
+
+            <% var nizSlika = oglas.slika.split(' ').filter(x=>x!='') %>
+            <% if(i<6) { %>
+            <div class="col-md-4 oglas">
+                <%i++;%>
+                <%}else{%>
+                <div class="col-md-4 oglas d-none">
+                    <%}%>
+                    <div class="card mb-2">
+                        <p style="display: none;" class="oglasId"><%= oglas.id %></p>
+                    <% if(nizSlika.length > 0) {%>
+                    <img src="/slike/<%= nizSlika[0] %>" style="width: 100%; height: 25vh;" class="card-img-top" alt="">
+                    <%} else{%>
+                    <img src="/slike/blanc.png" style="width: 100%; height: 25vh;" class="card-img-top" alt="">
+                    <% } %>
+                    <div class="card-body">
+                        <p class="card-title"><%= oglas.naslov %></p>
+                        <% if(oglas.vrstaPlacanja=="poDogovoru") {%>
+                        <p class="card-text">Deal</p>
+                        <% } %>
+                        <% if(oglas.vrstaPlacanja=="zamena") {%>
+                        <p class="card-text">Replacement</p>
+                        <% } %>
+                        <% if(oglas.vrstaPlacanja=="novac") {%>
+                        <p class="card-text"><%= oglas.cena %></p>
+                        <% } %>
+                    </div>
+
+
+                </div>
+            </div>
+
+            <% } %>
+            <div class="paginacija container text-center mb-2">
+                <p id="trenutniIndex" class="d-none">1</p>
+                <button class="btn btn-primary btn-lg font-weight-bold levo">
+                    &#10094;
+                </button>
+                <button class="btn btn-primary btn-lg font-weight-bold desno">
+                    &#10095;
+                </button>
+            </div>
+            <script src="/skripte/paginacija.js"></script>
+            <% } else if(typeof korisnik != 'undefined' && korisnik.username == kor.username){ %>
+            <div class="poruka container text-center">
+                <span class="text-danger h4 mx-auto alert alert-light">
+                   You don't have any ads, click <a href="/noviOglas">here</a> to add
+                </span>
+            </div>
+            <% }else{ %>
+            <div class="poruka text-warning h4 mx-auto alert alert-light">
+                <span>
+                    This user has not placed any ads.
+                </span>
+                <span>
+                    <a href="" id="nazad">Back</a>
+                </span>
+            </div>
+            <% } %>
+        </div>
+    </div>
+    <script>
+
+        $('#nazad').click(function () {
+            $('#nazad').prop('href', 'javascript:history.back()');
+        })
+        // ovo zameni sa jquery ispod je napisan kod, test posle
+        var oglasi = document.querySelectorAll(".oglas");
+        for (let oglas of oglasi) {
+            oglas.addEventListener('click', function () {
+                var id = this.getElementsByClassName("oglasId")[0].innerHTML;
+                location.href = "/oglas/" + id;
+            })
+        }
+
+        /*
+        $('.oglas').click(function(e){
+            var id = $(e.target).find('.oglasId').first().html();
+            location.href = '/oglas/' + id;
+        })
+        */
+
+    </script>
+    <style>
+        .oglas img {
+            width: 500px;
+            height: 400px;
+
+        }
+    </style>
+</body>
+
+</html>

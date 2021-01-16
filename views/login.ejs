@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en" class="h-100">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ads - Login</title>
+  <link rel="icon" href="/slike/logo.jpg" type="image/gif" sizes="16x16">
+</head>
+
+<body class="row h-100">
+  <script src="/skripte/jquery-3.5.1.js"></script>
+  <link rel="stylesheet" href="/css/bootstrap.css">
+  <link rel="stylesheet" href="/css/sve.css">
+
+  
+
+  <div class="col-lg-6 my-auto mx-auto border border-dark rounded text-center" style="background-color: rgba(0, 0, 0, 0.6);"d>
+
+
+    <form action="/login" method="POST" autocomplete="off" class="mt-4">
+      <div class="form-group row">
+        <label for="username" class="col-sm-2 col-form-label col-form-label-lg font-weight-bold text-light">Username:</label>
+        <div class="col-sm-10 h4 font-weight-bold">
+          <input type="text" name="username" id="username" class="form-control">
+          <div class="invalid-feedback " id="invalidUsername">
+          </div>
+        </div>
+      </div>
+      <div class="form-group row">
+        <label for="password" class="col-sm-2 col-form-label col-form-label-lg font-weight-bold text-light">Password:</label>
+        <div class="col-sm-10 h4 font-weight-bold">
+          <input type="password" name="password" id="password" class="form-control">
+          <div class="invalid-feedback" id="invalidPassword">
+          </div>
+        </div>
+      </div>
+      <div class="col-auto my-1">
+        <button type="submit" id="login" class="btn btn-secondary btn-lg">Log in</button>
+      </div>
+
+
+
+      <div id="loginPoruka" class="alert alert-warning" role="alert" style="display: none;">
+
+      </div>
+
+      <div class="col-auto my-1">
+        <a class="navbar-brand mx-auto font-weight-bold text-light" href="#" id="registracija">Register</a>
+      </div>
+
+      <div class="col-auto my-1">
+        <a class="navbar-brand mx-auto font-weight-bold text-light" href="/">Home page</a>
+      </div>
+    </form>
+
+  </div>
+
+  <script src="/skripte/login.js"></script>
+</body>
+
+</html>

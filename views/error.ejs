@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Error</title>
+    <script src="/skripte/jquery-3.5.1.js"></script>
+    <link rel="stylesheet" href="/css/bootstrap.css">
+    <link rel="stylesheet" href="/css/sve.css">
+    <link rel="icon" href="/slike/logo.jpg" type="image/gif" sizes="16x16">
+</head>
+
+<body>
+
+    <div class="container rounded text-center mt-5 py-5" style="background-color: rgba(0, 0, 0, 0.6);">
+        <div class="alert alert-light col-md-6 mx-auto">
+
+            <% if(typeof error != 'undefined' && error != null) { %>
+            <p class="h2 text-danger">
+                <%= error %>
+            </p>
+            <% } %>
+            <p class="h4 text-danger">
+                Go <a href="" id="nazad">back</a>
+            </p>
+
+            <script>
+                $('#nazad').click(function () {
+                    $('#nazad').prop('href', 'javascript:history.back()');
+                })
+            </script>
+        </div>
+    </div>
+</body>
+
+</html>

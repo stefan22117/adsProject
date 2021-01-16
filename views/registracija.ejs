@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en" class="h-100">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+    <script src="/skripte/jquery-3.5.1.js"></script>
+    <link rel="stylesheet" href="/css/bootstrap.css">
+    <link rel="stylesheet" href="/css/sve.css">
+    <link rel="icon" href="/slike/logo.jpg" type="image/gif" sizes="16x16">
+</head>
+
+<body class="row h-100">
+
+
+    <div class="col-lg-6 my-auto mx-auto border border-dark rounded text-center" style="background-color: rgba(0, 0, 0, 0.6);" >
+        <form action="/registracija" method="POST" autocomplete="off" class="mt-4">
+            <div class="form-group row" >
+                <label for="username" class="col-sm-2 col-form-label col-form-label-lg font-weight-bold text-light">Username:</label>
+                <div class="col-sm-10 h4 font-weight-bold">
+                    <input type="text" name="username" id="username" class="form-control">
+                    <div class="invalid-feedback " id="invalidUsername">
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label for="password" class="col-sm-2 col-form-label col-form-label-lg font-weight-bold text-light">Password:</label>
+                <div class="col-sm-4 h4 font-weight-bold">
+                    <input type="password" name="password1" id="password1" class="form-control">
+                    <div class="invalid-feedback " id="invalidPassword1">
+                    </div>
+                </div>
+
+                <label for="password2" class="col-sm-2 col-form-label col-form-label-lg font-weight-bold text-light">Repeat password:</label>
+                <div class="col-sm-4 h4 font-weight-bold">
+                    <input type="password" name="password2" id="password2" class="form-control">
+                    <div class="invalid-feedback " id="invalidPassword2">
+                    </div>
+                </div>
+            </div>
+
+
+
+
+            <div class="form-group row">
+                <label for="email" class="col-sm-2 col-form-label col-form-label-lg font-weight-bold text-light">Email:</label>
+                <div class="col-sm-4 h4 font-weight-bold">
+                    <input type="text" name="email" id="email" class="form-control">
+                    <div class="invalid-feedback " id="invalidEmail">
+                    </div>
+                </div>
+                <label for="brojTel" class="col-sm-2 col-form-label col-form-label-lg font-weight-bold text-light">Telephone Num:</label>
+                <div class="col-sm-4 h4 font-weight-bold">
+                    <input type="text" name="brojTel" id="brojTel" class="form-control">
+                    <div class="invalid-feedback " id="invalidBrojTel">
+                    </div>
+                </div>
+            </div>
+
+
+
+            <div class="col-auto my-1">
+                <button type="submit" id="registracija" class="btn btn-secondary btn-lg">Register</button>
+            </div>
+
+
+
+
+            <div id="registracijaPoruka" class="alert alert-warning" role="alert" style="display: none;">
+
+            </div>
+
+            <div class="col-auto my-1">
+                <a class="navbar-brand font-weight-bold text-light" href="#" id="login">Log in</a>
+            </div>
+            <div class="col-auto my-1">
+                <a class="navbar-brand mx-auto font-weight-bold text-light" href="/" >Home page</a>
+              </div>
+        </form>
+    </div>
+
+
+
+
+    <script src="/skripte/registracija.js"></script>
+</body>
+
+</html>

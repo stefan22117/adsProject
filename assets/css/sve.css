@@ -1,0 +1,13 @@
+a:hover{
+    text-decoration: none;
+}
+nav{
+    list-style-type:none;
+}
+li{
+    text-decoration: none;
+}
+body{
+    background-image: url('/slike/back.jpg');
+    background-size:cover;
+}

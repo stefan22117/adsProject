@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html class="h-100" lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inbox</title>
+    <link rel="icon" href="/slike/logo.jpg" type="image/gif" sizes="16x16">
+</head>
+
+<body>
+    <%- include("header") %>
+    <style>
+        .poruke, .korisnici {
+            width: 80%;
+            height: 300px;
+            overflow-y: hidden;
+            overflow: auto;
+            padding-top: 1rem;
+        }
+
+
+        
+        .kliknut-user {
+            color: #002246;
+            background-color: #5467c5;
+            border-color: #002aff;
+        }
+    </style>
+    <h1 class="text-center">Inbox</h1>
+    <hr class="bg-dark">
+    <div class="container mt-5 rounded" style="background-color: rgba(0, 0, 0, 0.6);">
+        <div class="row">
+            <div class="korisnici col-md-6 border rounded-left">
+                <%if(typeof korisnici != 'undefined' && korisnici != null && korisnici.length>0) {%>
+                <% for(let kor of korisnici) {%>
+
+                <% if(kor.pregledane == true) { %>
+                <% if(kor == korisnici[0] && typeof poruka == 'undefined'){ %>
+                <p class='korisnik kliknut-user alert alert-info'>
+                    <%= kor.username %>
+                </p>
+                <% } else { %>
+                <p class='korisnik alert alert-info'>
+                    <%= kor.username %>
+                </p>
+                <% } %>
+                <% } else { %>
+                <%if(kor == korisnici[0] && typeof poruka == 'undefined'){ %>
+
+                <p class='korisnik kliknut-user alert alert-danger'>
+                    <%= kor.username %>
+                </p>
+                <% } else { %>
+                <p class='korisnik alert alert-danger'>
+                    <%= kor.username %>
+                </p>
+                <% } %>
+                <% } %>
+
+                <%}%>
+        <%} else{%>
+                <div class="h-100 w-100 text-center row align-items-center">
+                    <p class="alert alert-warning h4 mx-auto">
+                        You did not exchange any messages<br>
+                        <a href="" id="nazad">Back</a>
+                    </p>
+                </div>
+                <%}%>
+        <% if(typeof poruka != "undefined" && poruka != null) {%>
+                <div class="poruka text-warning h4 mx-auto">
+                    <%= poruka %>
+                </div>
+                <% } %>
+            </div>
+
+
+            <div class="poruke col-md-6 border rounded-right">
+                <% if(typeof poruke!= 'undefined' && poruke != null && poruke.length > 0) {%>
+                <% for(let poruka of poruke) {%>
+
+                <%
+            var str = poruka.tekst;
+            var brojSlova = 30;
+            var brojRedova = parseInt(str.length / brojSlova)
+            nizRedova = [];
+            var a = str.split('')
+            for (let i = 0; i < brojRedova; i++) {
+                nizRedova[i] = a.slice(0, brojSlova);
+                a = a.slice(brojSlova)
+            }
+            if (str.length % brojSlova > 0) {
+                nizRedova[nizRedova.length] = a.slice(0, str.length % brojSlova)
+            }
+            for (let i = 0; i < nizRedova.length; i++) {
+                nizRedova[i] = nizRedova[i].join('')
+            }      
+            %>
+
+                <% var celaPoruka = '';%>
+                <%if(poruka.zaUsername == korisnik.username){%>
+
+
+                <div class="text-left d-block">
+
+
+                    <p class="ml-0 d-inline-block alert alert-secondary">
+                        <% for(let red of nizRedova) {%>
+                        <%= red %> <br>
+                        <% } %>
+
+                    </p>
+                </div>
+                <%} else{%>
+                <div class="text-right d-block">
+                    <p class="mr-0 d-inline-block alert alert-primary">
+                        <% for(let red of nizRedova) {%>
+                        <%= red %> <br>
+                        <% } %>
+                    </p>
+                </div>
+                <%}%>
+        <% } %>
+                <% } else{%>
+                <div id="prvi" class="h-100 w-100 text-center row align-items-center">
+                    <p class="alert alert-light h4 mx-auto font-italic">
+                        Send message first!
+                    </p>
+                </div>
+                <% } %>
+            </div>
+
+        </div>
+
+        <form class="row" autocomplete="off">
+            <input type="text" id="tekst" class="form-control form-control-lg col-md-10 ">
+            <button type="submit" id="posalji" class="btn btn-primary col-md-2 btn-lg">Send message</button>
+        </form>
+
+    </div>
+
+    <script>
+        function podeliTekst(str, brojSlova) {
+            var brojRedova = parseInt(str.length / brojSlova)
+            nizRedova = [];
+            var a = str.split('')
+            for (let i = 0; i < brojRedova; i++) {
+                nizRedova[i] = a.slice(0, brojSlova);
+                a = a.slice(brojSlova)
+            }
+
+            if (str.length % brojSlova > 0) {
+                nizRedova[nizRedova.length] = a.slice(0, str.length % brojSlova)
+            }
+            for (let i = 0; i < nizRedova.length; i++) {
+                nizRedova[i] = nizRedova[i].join('')
+            }
+            return nizRedova;
+        }
+
+        function ispisiPoruke(data, username) {
+            var str = "";
+            var poruke = data.poruke;
+            if (typeof poruke != 'undefined' && poruke != null && poruke.length > 0) {
+                for (let poruka of poruke) {
+                    var celaPoruka = '';
+                    if (poruka.odUsername == username) {//ovo je username koji je kliknut, ne username ulogovanog korisnika
+                        str += '<div class="text-left d-block">\n'
+                        for (let red of podeliTekst(poruka.tekst, 30)) {
+                            celaPoruka += red + '<br>\n'
+
+                        }
+                        str += '<p class="ml-0 d-inline-block alert alert-secondary">' + celaPoruka + '</p>\n';
+
+                        str += '</div>\n'
+                    }
+                    else {
+                        str += '<div class="text-right d-block">\n'
+                        for (let red of podeliTekst(poruka.tekst, 30)) {
+                            celaPoruka += red + '<br>\n'
+
+                        }
+                        str += '<p class="mr-0 d-inline-block alert alert-primary">' + celaPoruka + '</p>\n';
+                        str += '</div>\n'
+                    }
+                }
+            }
+            else {
+                str += '<div id="prvi" class="h-100 w-100 text-center row align-items-center">\n';
+                str += '<p class="alert alert-light h4 mx-auto font-italic">'
+                str += 'Send message first!';
+                str += '</p>'
+                str += '</div>\n'
+
+
+            }
+            $('.poruke').html(str);
+
+
+            $('#prvi').click(function(){
+            $('#tekst').focus();
+        })
+        }
+
+    </script>
+
+
+
+    <script>
+        $('#nazad').click(function () {
+            $('#nazad').prop('href', 'javascript:history.back()');
+        })
+
+        var maxScroll = Number.MAX_SAFE_INTEGER;
+        $('.poruke').scrollTop(maxScroll);
+
+
+        $('#tekst').focus(function (e) {
+            var username = $('.kliknut-user').html();
+            if(typeof username != 'undefined'){
+                username = username.trim();
+            }
+            $.ajax({
+                url: '/seen',
+                type: 'post',
+                data: {
+                    username: username
+                },
+                success: function (data) {
+                    $('.kliknut-user').first().removeClass('neprocitan')
+
+                    $.ajax({
+                        type: 'post',
+                        url: '/proveriPoruke',
+                        data: {},
+                        success: function (data) {
+                            azurirajSanduce(data)
+                        }
+                    })
+                }
+            })
+
+
+        })
+        function dajKlikKorisnicima() {
+            $(".korisnik").click(function (e) {
+
+                $('.korisnik').removeClass('kliknut-user');
+
+                $(e.target).addClass('kliknut-user');
+
+
+                var username = $(e.target).html().trim();
+                $.ajax({
+                    url: '/ucitajPoruke',
+                    type: 'post',
+                    data: { username: username },
+                    success: function (data) {
+                        ispisiPoruke(data, username);
+
+                        var maxScroll = Number.MAX_SAFE_INTEGER;
+                        $('.poruke').scrollTop(maxScroll);
+                    }
+                })
+
+            });
+        }
+
+
+        dajKlikKorisnicima();
+
+    </script>
+
+
+    <script>
+        $('#prvi').click(function(){
+            $('#tekst').focus();
+        })
+
+
+        $('#posalji').click(function (e) {
+            var tekst = $('#tekst').val();
+            var zaUsername = $('.kliknut-user').html();
+
+
+            var regexTekst = /^\p{L}[\p{L}0-9_ ]+$/u;
+            $('#tekst').prop('placeholder', '');
+            
+            if(regexTekst.test(tekst) && typeof zaUsername != 'undefined'){
+                zaUsername = zaUsername.trim();
+                $.ajax({
+                    url: '/posaljiPoruku',
+                    type: 'post',
+                    data: { tekst: tekst, zaUsername: zaUsername },
+                    success: function (data) {
+                        $.ajax({
+                            url: '/ucitajPoruke',
+                            type: 'post',
+                            data: { username: zaUsername },
+                            success: function (poruke) {
+                                ispisiPoruke(poruke, zaUsername);
+                                $('#tekst').val('');
+                                var maxScroll = Number.MAX_SAFE_INTEGER;
+                                $('.poruke').scrollTop(maxScroll);
+                            }
+                        })
+                    }
+                })
+                $('#prvi').remove();
+                return false;
+            }
+            else{
+                $('#tekst').prop('placeholder', 'You did not enter the message correctly');
+                return false;
+            }
+
+
+
+
+
+        })
+    </script>
+
+    <script>
+        var interval = setInterval(function () {
+            var username = $('.kliknut-user').html();
+            if (username != undefined) {
+                username = username.trim();
+                $.ajax({
+                    url: '/ucitajPoruke',
+                    type: 'post',
+                    data: { username: username },
+                    success: function (data) {
+                        ispisiPoruke(data, username);
+                    }
+                })
+            }
+
+        }, 5000);
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Updating ad</title>
+    <link rel="icon" href="/slike/logo.jpg" type="image/gif" sizes="16x16">
+</head>
+
+<body>
+    <%- include("header") %>
+    <% if(typeof UspesnoAzuriranPoruka != 'undefined') {%>
+    <div>
+        <p><%= UspesnoAzuriranPoruka %></p>
+        <p>Return to the <a href="/">home page</a></p>
+    </div>
+    <% } %>
+    <hr>
+    <div class="container text-center rounded pt-3 pb-3" style="background-color: rgba(0, 0, 0, 0.6);">
+        <form action="/azuriranjeOglasa" method="POST" enctype="multipart/form-data" id="formaNoviOglas"
+            class="text-center" autocomplete="off">
+            <input type="hidden" name="oglasId" value="<%= oglas.id %>">
+            
+            <span id="poruka" class="text-warning h4 mx-auto alert alert-light d-none">
+                <% if(typeof poruka != 'undefined') {%>
+                <%= poruka %>
+                <% } %>
+            </span>
+
+            <div class="form-group row d-block">
+                <label for="naslov" class="col-md-2 col-form-label navbar-brand font-weight-bold text-light">Header</label>
+                <input type="text" name="naslov" id="naslov" value="<%= oglas.naslov %>"
+                    class="form-control col-md-9 navbar-brand">
+            </div>
+
+            <% var nizSlika = oglas.slika.split(' ').filter(x=>x!='') %>
+            <div class="stareSlike rounded" style="background-color: rgba(0, 0, 0, 0.1);">
+                <% for(slika of nizSlika) {%>
+                <div class="slika mx-auto">
+                    <img src="/slike/<%= slika %>" alt="">
+                    <input type="hidden" name="nazivSlike" value="<%= slika %>">
+                </div>
+
+
+                <% } %>
+            </div>
+            <style>
+                .stareSlike {
+                    width: 100%;
+                    height: 200px;
+                    background-color: white;
+                    display: flex;
+                    overflow: auto;
+                    overflow-y: hidden;
+                }
+
+                .slika {
+                    position: relative;
+                    width: 400px;
+                    height: 200px;
+                    float: left;
+
+                }
+
+                .slika>img {
+                    width: 400px;
+                    height: 200px;
+                }
+
+
+                .iks {
+                    color: red;
+                    width: 25px;
+                    height: 25px;
+                    justify-content: center;
+                    text-align: center;
+                    cursor: pointer;
+                    font-weight: bold;
+                    left: auto;
+                    right: 0px;
+                    position: absolute;
+                    background-color: rgb(0, 0, 0, 0.5);
+                }
+
+                .iks:hover {
+                    color: red;
+                }
+
+                .iks>a {
+                    margin: 0px;
+                    padding: 0px;
+
+                }
+            </style>
+            
+            
+            <div class="form-group row d-block">
+                <label for="fajl" class="col-md-2 col-form-label navbar-brand font-weight-bold text-light">Images</label>
+                <div style="background-color: white; width: 100px; height: 100px;" class="mx-auto form-control w-75">
+                    <input type="file" name="fajl" id="fajl" class="custom-file-input w-100 h-100 " multiple="multiple">
+                </div>
+            </div>
+
+            <div class="form-group row d-block">
+                <label for="vrstaPlacanja" class="col-md-2 col-form-label navbar-brand mx-auto font-weight-bold text-light">
+                    Payment type:</label>
+                <div class="col-md-2 navbar-brand">
+                    <input type="radio" name="vrstaPlacanja" value="poDogovoru" id="poDogovoru"
+                        <%= oglas.vrstaPlacanja == 'poDogovoru' ? 'checked' : '' %>><label for="poDogovoru"
+                        class="navbar-brand mx-auto font-weight-bold text-light">Deal</label>
+                </div>
+                <div class="col-md-2 navbar-brand">
+                    <input type="radio" name="vrstaPlacanja" value="zamena" id="zamena"
+                        <%= oglas.vrstaPlacanja == 'zamena' ? 'checked' : '' %>><label for="zamena"
+                        class="navbar-brand mx-auto font-weight-bold text-light">Replacement</label>
+                </div>
+                <div class="col-md-2 navbar-brand">
+                    <input type="radio" name="vrstaPlacanja" value="novac" id="novac"
+                        <%= oglas.vrstaPlacanja == 'novac' ? 'checked' : '' %>><label for="novac"
+                        class="navbar-brand mx-auto font-weight-bold text-light">Money</label>
+                </div>
+            </div>
+            <br>
+
+            <div class="form-group row d-block">
+                <% if(typeof vrste == 'undefined' || vrste.length == 0) {%>
+                <label for="vrsta" class="col-md-4 col-form-label navbar-brand mx-auto font-weight-bold text-light">Ad type:</label>
+                <select name="vrsta" id="vrsta" class="col-md-4 form-control navbar-brand mx-auto">
+                    <option value="">Choose type</option>
+                </select>
+                <% } else{ %>
+                <label for="vrsta" class="col-md-4 col-form-label navbar-brand mx-auto font-weight-bold text-light">Ad type:</label>
+                <select name="vrsta" id="vrsta" class="col-md-4 form-control navbar-brand mx-auto">
+                    <% for(let vrsta of vrste) {%>
+                    <% if(vrsta.id == oglas.VrstaId) {%>
+                    <option value="<%= vrsta.id %>"><%= vrsta.naziv %></option>
+                    <%
+                    break;
+            } %>
+                    <% } %>
+
+                    <% for(let vrsta of vrste) {%>
+                    <% if(vrsta.id != oglas.VrstaId) {%>
+                    <option value="<%= vrsta.id %>"><%= vrsta.naziv %></option>
+                    <% } else{%>
+                    continue;
+                    <% } %>
+                    <% } %>
+                </select>
+                <% } %>
+
+            </div>
+
+
+            <div class="novacDiv form-group row <%= oglas.vrstaPlacanja == 'novac' ? 'd-block' : 'd-none' %>"
+                id="novacDiv">
+                <label for="cena" class="col-md-2 col-form-label navbar-brand mx-auto font-weight-bold text-light">Price</label>
+                <input type="text" name="cena" id="cena" value='<%= oglas.vrstaPlacanja == "novac" ? oglas.cena : "" %>'
+                    class="form-control col-md-2 navbar-brand mx-auto">
+            </div>
+
+            <div class="form-group row d-block">
+                <label for="opis" class="col-md-2 col-form-label navbar-brand mx-auto font-weight-bold text-light">
+                    Description</label>
+            </div>
+            <div class="form-group row d-block">
+                <textarea cols="20" rows="10" class="form-control mx-auto col-md-6" id="opis" name="opis"><%= oglas.opis %></textarea>
+            </div>
+            
+            
+            <div class="form-group row d-block">
+                <button type="submit" class="btn btn-success btn-lg" id="sacuvaj">Save</button>
+            </div>
+
+
+                
+
+        </form>
+    </div>
+    <script src="/skripte/azuriranjeOglasa.js"></script>
+   
+</body>
+
+</html>

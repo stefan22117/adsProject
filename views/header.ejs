@@ -1,0 +1,140 @@
+<script src="/skripte/jquery-3.5.1.js"></script>
+<link rel="stylesheet" href="/css/bootstrap.css">
+<link rel="stylesheet" href="/css/sve.css">
+<link rel="stylesheet" href="/css/fontawesome.min.css">
+<link rel="stylesheet" href="/css/all.min.css">
+
+
+<div class="w-100 d-flex">
+
+    <% if(typeof korisnik != "undefined" && korisnik != null) {%>
+    <nav class="navbar navbar-dark bg-dark" style="width: 100%;">
+        <li class="nav-item active">
+            <a href="/" class="navbar-brand">Home page</a>
+        </li>
+        <li class="nav-item active">
+            <a class="navbar-brand btn btn-outline-success" href="/noviOglas">New ad</a>
+        </li>
+        <li class="nav-item active">
+            <a class="navbar-brand" href="/oglasiKorisnika/?username=<%= korisnik.username %>"><%= korisnik.username %></a>
+        </li>
+        <li class="navbar-item active badge badge-dark " id="sanduce">
+            <span class="navbar-brand">
+                <a class="navbar-brand" href="/inbox">Inbox</a>
+                <span id="brojPoruka" class="text-lg badge badge-danger"></span>
+            </span>
+            
+        </li>
+        <li class="nav-item active">
+            <a class="navbar-brand" href="/oglasiKorisnika/?username=<%= korisnik.username %>" id="vidiSve">See all
+                your ads</a>
+        </li>
+
+        <%if(korisnik.role == 'admin') {%>
+        <li class="nav-item active">
+            <a class="navbar-brand" href="/admin">Admin panel</a>
+        </li>
+        <%}%>
+
+           
+          <li class="nav-item active">
+            <button class="btn btn-outline-danger logoutBtn">Log off</button>
+          </li>
+      </nav>
+      
+        <script>
+            function azurirajSanduce(data){
+                if (data.postoji) {
+                        $('#sanduce').first().addClass('badge-primary').removeClass('badge-dark');
+                        if(data.brojPoruka != 'undefined' && data.brojPoruka != 0){
+                            $('#brojPoruka').html(data.brojPoruka);
+                        }
+                        
+                    }
+                    else {
+                        $('#sanduce').first().addClass('badge-dark').removeClass('badge-primary');
+                        $('#brojPoruka').html('');
+                    }
+            }
+
+
+
+
+            $.ajax({
+                type: 'post',
+                url: '/proveriPoruke',
+                data: {},
+                success: function (data) {
+                    azurirajSanduce(data)
+                    
+                }
+            });
+
+
+            $(".logoutBtn").click(function () {
+                location.href = "/logout";
+            });
+
+            var interval = setInterval(function () {
+                $.ajax({
+                    type: 'post',
+                    url: '/proveriPoruke',
+                    data: {},
+                    success: function (data) {
+                        azurirajSanduce(data)
+                    }
+                });
+
+            }, 5000);
+        </script>
+        
+    <% } else{ %>
+
+            
+            <form class="form-inline w-100" action="/login" method="POST" autocomplete="off">
+                <nav class="navbar navbar-dark bg-dark w-100">
+            
+            
+                <li class="nav-item active">
+                    <a href="/" class="navbar-brand">Home page</a>
+                </li>
+
+            <li class="nav-item active">
+                <label for="username" class="navbar-brand">Username:</label>
+            </li>
+            <li class="nav-item active">
+                <input type="text" name="username" id="username" class="form-control">
+            </li>
+
+            <li class="nav-item active">
+                <label for="password" class="navbar-brand">Password:</label>
+            </li>
+            <li class="nav-item active">
+                <input type="password" name="password" id="password" class="form-control">
+            </li>
+            <li class="nav-item active">
+                <button type="submit" id="login" class="btn btn-secondary">Log in</button>
+            </li>
+            <li class="nav-item active">
+                <a class="navbar-brand text-light" href="#" id="registracija">Register</a>
+            </li>
+        </nav>
+            </form>
+
+        <br>
+        
+
+
+        <script src="/skripte/login.js"></script>
+        <% } %>
+        <script>
+            $('#logo').click(function () {
+                location.href = '/';
+            });
+        </script>
+        <div class="text-center">
+            <span id="loginPoruka" class="d-none h3 text-danger">
+            </span>
+        </div>
+        <hr class="bg-dark">
+</div>

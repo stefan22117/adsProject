@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin panel</title>
+    <link rel="icon" href="/slike/logo.jpg" type="image/gif" sizes="16x16">
+</head>
+
+<body>
+    <%- include("header") %>
+    <div class="text-center">
+
+        <span class="h1">Admin panel</span>
+    </div>
+    <hr class="bg-dark">
+    <div>
+
+        <div class="text-center container">
+            <p class="h4 text-danger alert alert-light d-none" id="porukaDanger"></p>
+        </div>
+
+        <div class="text-center container">
+            <p class="h4 text-success alert alert-light d-none" id="poruka"></p>
+        </div>
+
+        <div class="text-center container rounded pb-1 mb-3" id="divKorisnici" style="background-color: rgba(0, 0, 0, 0.6);">
+            <% if(typeof korisnici != 'undefined' && korisnici != null && korisnici.length > 0){ %>
+            <h3 class="text-light">List of users</h3>
+            <table class="mx-auto">
+                <% for(let kor of korisnici) {%>
+                <tr class="h4">
+                    <td>
+                        <i class="user-tel badge badge-secondary badge-lg badge-pill invisible">Username: </i>
+                        <span class="text-light"><%= kor.username %></span>
+                    </td>
+                    <td>
+                        <i class="user-tel badge badge-secondary badge-lg badge-pill invisible">Tel: </i>
+                        <span class="text-light"><%= kor.brojTel %></span>
+                    </td>
+
+                    <td>
+                        <a class="btn btn-outline-info" href="/oglasiKorisnika?username=<%= kor.username %>">
+                            See ads
+                        </a>
+                    </td>
+                    <td>
+                        <a class="btn btn-outline-success" href="/inbox/?za=<%= kor.username %>">
+                            Send message
+                        </a>
+                    </td>
+                    <td>
+                        <a class="btn btn-outline-danger brisanje-kor-dugme"
+                            href="/admin/obrisiKorisnika/<%= kor.username %>">
+                            Delete user
+                        </a>
+                    </td>
+                </tr>
+                <% } %>
+            </table>
+            <% } else{ %>
+            <div class="text-center pt-3">
+                <p class="h4 text-warning alert alert-light">You are the only user</p>
+            </div>
+            <% } %>
+        </div>
+        <div class="text-center container rounded pb-1" id="divVrste" style="background-color: rgba(0, 0, 0, 0.6);">
+            <% if(typeof vrste != 'undefined' && vrste != null && vrste.length > 0) { %>
+            <h3 class="text-light" id="vrsteNaslov">Types</h3>
+            <button class="btn btn-outline-success mb-1" id="dodajVrstu">Add new type</button>
+            <table class="mx-auto">
+                <% for (let vrsta of vrste) { %>
+                <tr class="h4">
+                    <td>
+                        <span class="text-light"><%= vrsta.naziv %></span>
+
+                    </td>
+                    <td>
+                        <a class="btn btn-outline-danger brisanje-vrs-dugme" href="/admin/obrisiVrstu/<%= vrsta.id %>">
+                            Delete type
+                        </a>
+                    </td>
+                </tr>
+                <% } %>
+            </table>
+            <%} else{ %>
+            <div class="text-center pt-3">
+                <p class="h4 text-warning alert alert-light">No types was inserted</p>
+                <button class="btn btn-outline-success mb-1" id="dodajVrstu">Add new type</button>
+            </div>
+
+            <% } %>
+        </div>
+
+    </div>
+    
+
+    <script>
+
+        $('td').mouseenter(function (e) {
+            $(e.target).find('.user-tel').removeClass('invisible');
+            $('td').mouseleave(function (e) {
+                $(e.target).find('.user-tel').addClass('invisible');
+            })
+        })
+        dodajFunObrisiKorisnika();
+        dodajFunObrisiVrstu();
+        dodajFunDodajVrstu();
+
+
+
+        function dodajFunObrisiKorisnika() {
+            $('.brisanje-kor-dugme').click(function (e) {
+
+                var niz = $(e.target).prop('href').split('/');
+                var username = niz[niz.length - 1];
+
+
+
+                $.ajax({
+                    url: '/admin/obrisiKorisnika',
+                    type: 'post',
+                    data: { username: username },
+                    success: function (data) {
+                        var korisnici = data.korisnici;
+                        var poruka = data.poruka;
+                        var porukaDanger = data.porukaDanger;
+                        if (typeof poruka != 'undefined' && poruka != null) {
+                            $('#poruka').html(poruka);
+                            $('#poruka').removeClass('d-none');
+                            $('#porukaDanger').addClass('d-none');
+                        }
+                        else if (typeof porukaDanger != 'undefined' && porukaDanger != null) {
+                            $('#porukaDanger').html(porukaDanger);
+                            $('#porukaDanger').removeClass('d-none');
+                            $('#poruka').addClass('d-none');
+                        }
+                        str = '';
+                        if (typeof korisnici != 'undefined' && korisnici != null && korisnici.length > 0) {
+                            str += '<h3 class="text-light">List of users</h3>\n';
+                            str += '<table class="mx-auto">\n';
+                            for (let kor of korisnici) {
+                                str += '<tr class="h4">\n';
+
+                                str += '<td>\n';
+                                str += '<i class="user-tel badge badge-secondary badge-lg badge-pill invisible">\n';
+                                str += 'Username: </i>\n';
+                                str += '<span class="text-light">\n';
+                                str += kor.username;
+                                str += '</span>\n'
+                                str += '</td>\n';
+
+                                str += '<td>\n';
+                                str += '<i class="user-tel badge badge-secondary badge-lg badge-pill invisible">\n';
+                                str += 'Tel: </i>\n';
+                                str += '<span class="text-light">\n';
+                                str += kor.brojTel;
+                                str += '</span>\n'
+                                str += '</td>\n';
+
+                                str += '<td>\n';
+                                str += '<a class="btn btn-outline-info" href="/oglasiKorisnika?username=' + kor.username + '">\n';
+                                str += 'See ads';
+                                str += '</a>\n';
+                                str += '</td>\n';
+
+
+                                str += '<td>\n';
+                                str += '<a class="btn btn-outline-success" href="/inbox/?za=' + kor.username + '">\n';
+                                str += 'Send message';
+                                str += '</a>\n';
+                                str += '</td>\n';
+
+                                str += '<td>\n';
+                                str += '<a class="btn btn-outline-danger brisanje-kor-dugme" ';
+                                str += 'href="/admin/obrisiKorisnika/' + kor.username + '">\n'
+                                str += 'Delete user';
+                                str += '</a>\n';
+                                str += '</td>\n';
+
+
+                                str += '</tr>\n';
+                            }
+                            str += '</table>\n';
+                        }
+                        else {
+                            str += '<div class="text-center pt-3">\n'
+                            str += '<p class="h4 text-warning alert alert-light">You are the only user</p>\n'
+                            str += '</div>\n'
+                        }
+
+
+
+
+
+
+
+
+
+                        $('#divKorisnici').html(str);
+                        dodajFunObrisiKorisnika();
+                    }
+                })
+
+
+                return false;
+
+            })
+        }
+
+        function dodajFunObrisiVrstu() {
+            $('.brisanje-vrs-dugme').click(function (e) {
+
+                var niz = $(e.target).prop('href').split('/')
+                var id = niz[niz.length - 1]
+                
+                $.ajax({
+                    url: '/admin/obrisiVrstu',
+                    type: 'post',
+                    data: { id: id },
+                    success: function (data) {
+                        var vrste = data.vrste;
+                        var poruka = data.poruka;
+                        var porukaDanger = data.porukaDanger;
+
+                        if (typeof poruka != 'undefined' && poruka != null) {
+                            $('#poruka').html(poruka);
+                            $('#poruka').removeClass('d-none');
+                            $('#porukaDanger').addClass('d-none');
+                        }
+                        else if (typeof porukaDanger != 'undefined' && porukaDanger != null) {
+                            $('#porukaDanger').html(porukaDanger);
+                            $('#porukaDanger').removeClass('d-none');
+                            $('#poruka').addClass('d-none');
+                        }
+                        str = '';
+                        if (typeof vrste != 'undefined' && vrste != null && vrste.length > 0) {
+                            str += '<h3 class="text-light" id="vrsteNaslov">Vrste</h3>\n';
+                            str += '<button class="btn btn-outline-success mb-1" id="dodajVrstu">Dodaj novu vrstu</button>\n';
+                            str += '<table class="mx-auto">\n';
+                            for (let vrsta of vrste) {
+                                str += '<tr class="h4">\n';
+                                str += '<td>\n';
+                                str += '<span class="text-light">' + vrsta.naziv + '</span>\n';
+                                str += '</td>\n';
+                                str += '<td>\n';
+                                str += '<a class="btn btn-outline-danger brisanje-vrs-dugme" href="/admin/obrisiVrstu/'
+                                    + vrsta.id + '">\n';
+                                str += 'Obrisi vrstu\n';
+                                str += '</a>\n';
+                                str += '</td>\n';
+                                str += '</tr>\n';
+                            }
+                            str += '</table>\n';
+
+                        }
+                        else {
+                            str += '<div class="text-center pt-3">\n';
+                            str += '<p class="h4 text-warning alert alert-light">Nije ubačena ni jedna vrsta</p>\n';
+                            str += '<button class="btn btn-outline-success mb-1" id="dodajVrstu">Dodaj novu vrstu</button>\n';
+                            str += '</div>\n';
+                        }
+
+
+                        $('#divVrste').html(str);
+                        dodajFunObrisiVrstu();
+                        dodajFunDodajVrstu();
+                    }
+                });
+                return false;
+            })
+        }
+
+
+        function dodajFunDodajVrstu() {
+            $('#dodajVrstu').click(function () {
+                var formaStr = '';
+                formaStr += '<form class="form-row mx-auto col-md-5 mb-2" id="formaNovaVrsta" autocomplete="off">\n';
+                    formaStr += '<div class="col-md-7 h5 font-weight-bold">\n';
+                formaStr += '<input type="text" name="vrstaNaziv" id="vrstaNaziv" class="form-control ">\n';
+
+                formaStr+='<div class="invalid-feedback" id="invalidvrstaNaziv">\n';
+                formaStr+='</div>\n';
+                formaStr += '</div>\n';
+
+                formaStr += '<button type="submit" id="dodajV" ';
+                formaStr += 'class="form-control btn btn-success col-md-4">Dodaj vrstu</button>\n';
+
+
+                formaStr += '<button type="submit" ';
+                formaStr += 'class="form-control btn btn-danger col-md-1" id="odustaniVrsta">&#215;</button>\n';
+
+
+
+                formaStr += '</forma>\n';
+
+               
+
+                $(formaStr).insertAfter($('#dodajVrstu'));
+                $('#vrsteNaslov').html('Unseite naziv vrste');
+                $('#dodajVrstu').remove();
+
+
+                $('#odustaniVrsta').click(function () {
+                    
+                    var dugmeStr = '<button class="btn btn-outline-success mb-1" id="dodajVrstu">Dodaj novu vrstu</button>\n';
+
+                    $(dugmeStr).insertAfter($('#formaNovaVrsta'));
+                    $('#vrsteNaslov').html('Vrste');
+                    $('#formaNovaVrsta').remove();
+                    dodajFunDodajVrstu();
+                    return false;
+                })
+                $('#dodajV').click(function(){
+                    var regexVrsta = /^\p{L}[\p{L}0-9_ ]+$/u;
+                    var vrstaNaziv = $('#vrstaNaziv').val();
+                    if(regexVrsta.test(vrstaNaziv)){
+                        $('#vrstaNaziv').removeClass('is-invalid');
+                        $('#vrstaNaziv').addClass('is-valid');
+
+                        $.ajax({
+                            url: '/admin/dodajVrstu',
+                            type: 'post',
+                            data: {
+                                vrstaNaziv: vrstaNaziv
+                            },
+                            success: function(data){
+                        var vrste = data.vrste;
+                        var poruka = data.poruka;
+                        var porukaDanger = data.porukaDanger;
+
+                        if (typeof poruka != 'undefined' && poruka != null) {
+                            $('#poruka').html(poruka);
+                            $('#poruka').removeClass('d-none');
+                            $('#porukaDanger').addClass('d-none');
+                        }
+                        else if (typeof porukaDanger != 'undefined' && porukaDanger != null) {
+                            $('#porukaDanger').html(porukaDanger);
+                            $('#porukaDanger').removeClass('d-none');
+                            $('#poruka').addClass('d-none');
+                        }
+                        str = '';
+                        if (typeof vrste != 'undefined' && vrste != null && vrste.length > 0) {
+                            str += '<h3 class="text-light" id="vrsteNaslov">Vrste</h3>\n';
+                            str += '<button class="btn btn-outline-success mb-1" id="dodajVrstu">Dodaj novu vrstu</button>\n';
+                            str += '<table class="mx-auto">\n';
+                            for (let vrsta of vrste) {
+                                str += '<tr class="h4">\n';
+                                str += '<td>\n';
+                                str += '<span class="text-light">' + vrsta.naziv + '</span>\n';
+                                str += '</td>\n';
+                                str += '<td>\n';
+                                str += '<a class="btn btn-outline-danger brisanje-vrs-dugme" href="/admin/obrisiVrstu/'
+                                    + vrsta.id + '">\n';
+                                str += 'Obrisi vrstu\n';
+                                str += '</a>\n';
+                                str += '</td>\n';
+                                str += '</tr>\n';
+                            }
+                            str += '</table>\n';
+
+                        }
+                        else {
+                            str += '<div class="text-center pt-3">\n';
+                            str += '<p class="h4 text-warning alert alert-light">Nije ubacena ni jedna vrsta</p>\n';
+                            str += '<button class="btn btn-outline-success mb-1" id="dodajVrstu">Dodaj novu vrstu</button>\n';
+                            str += '</div>\n';
+                        }
+
+
+                        $('#divVrste').html(str);
+                        dodajFunObrisiVrstu();
+                        dodajFunDodajVrstu();
+                    }
+                        })
+                    }
+                    else{
+                        $('#invalidvrstaNaziv').html('Niste pravilno uneli naziv vrste');
+                        $('#vrstaNaziv').removeClass('is-valid');
+                        $('#vrstaNaziv').addClass('is-invalid');
+                    }
+                    
+                    
+
+
+                    return false;
+                })
+                $('#vrstaNaziv').focus();
+                
+
+                return false;
+            })
+
+        }
+
+
+
+    </script>
+</body>
+
+</html>

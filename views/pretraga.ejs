@@ -1,0 +1,57 @@
+<form id='pretragaForm' action="/pretraga" class="navbar navbar-dark bg-dark" autocomplete="off">
+    <table class="w-100">
+        <tbody>
+            <tr>
+
+                <td>
+                    <input type="text" name="naslov" id="naslov" placeholder="search..." class="form-control">
+                </td>
+                <td>
+
+                    <select name="vrsta" id="vrsta" class="form-control">
+                        <option value="">Choose type</option>
+                        <%if(typeof vrste != 'undefined' && vrste.length > 0){%>
+                        <% for(let vrsta of vrste) {%>
+                        <option value="<%= vrsta.id %>"><%= vrsta.naziv %></option>
+                        <% } %>
+                        <% } %>
+                    </select>
+                </td>
+
+                <td>
+                    <input type="radio" name="vrstaPlacanja" value="poDogovoru" id="poDogovoru">
+                    <label for="poDogovoru" class="navbar-brand">Deal</label>
+                </td>
+                <td>
+                    <input type="radio" name="vrstaPlacanja" value="zamena" id="zamena">
+                    <label for="zamena" class="navbar-brand">Replacement</label>
+                </td>
+                <td>
+                    <input type="radio" name="vrstaPlacanja" value="novac" id="novac">
+                    <label for="novac" class="navbar-brand">Money</label>
+                </td>
+                <td class="cena" style="display: none;">
+
+                    <input type="text" name="cenaOdInput" id="cenaOdInput" class="form-control">
+                    <input type="range" class="cenaOd custom-range" name="cenaOd" id="cenaOd" min="0" max="50000"
+                        value="0">
+
+
+                </td>
+                <td class="cena" style="display: none;">
+
+
+                    <input type="text" name="cenaDoInput" id="cenaDoInput" class="form-control">
+                    <input type="range" class="cenaDo custom-range" name="cenaDo" id="cenaDo" min="0" max="50000"
+                        value="50000">
+
+                </td>
+                <td>
+                    <button type="submit" id="pretrazi" class="btn btn-info btn-lg h-100">Search</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</form>
+<hr class="bg-dark">
+<script src="/skripte/pretraga.js"></script>

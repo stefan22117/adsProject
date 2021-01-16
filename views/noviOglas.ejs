@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New ad</title>
+    <link rel="icon" href="/slike/logo.jpg" type="image/gif" sizes="16x16">
+</head>
+
+<body>
+    <%- include("header") %>
+    <h1 class="text-center">New ad</h1>
+    <hr class="bg-dark">
+    <div class="container text-center rounded py-3 mb-3" style="background-color: rgba(0, 0, 0, 0.6);" >
+        <form action="/noviOglas" method="POST" enctype="multipart/form-data" id="formaNoviOglas" autocomplete="off">
+
+            <span id="poruka" class="text-warning h4 mx-auto alert alert-light d-none">
+                <% if(typeof poruka != 'undefined') {%>
+                <%= poruka %>
+                <% } %>
+            </span>
+            <div class="form-group row d-block">
+                <label for="naslov" class="col-md-2 col-form-label navbar-brand font-weight-bold text-light">Header</label>
+                <input type="text" name="naslov" id="naslov" class="form-control col-md-9 navbar-brand">
+            </div>
+
+            <div class="form-group row d-block">
+                <label for="fajl" class="col-md-2 col-form-label navbar-brand font-weight-bold text-light">Images</label>
+                <div style="background-color: white; width: 100px; height: 100px;" class="mx-auto form-control w-75">
+                    <input type="file" name="fajl" id="fajl" class="custom-file-input w-100 h-100 " multiple="multiple">
+                </div>
+            </div>
+
+
+            <div class="form-group row d-block">
+                <label for="vrstaPlacanja" class="col-md-2 col-form-label navbar-brand mx-auto font-weight-bold text-light">Vrsta placanja:</label>
+                <div class="col-md-2 navbar-brand">
+                    <input type="radio" name="vrstaPlacanja" value="poDogovoru" id="poDogovoru">
+                    <label for="poDogovoru" class="navbar-brand mx-auto font-weight-bold text-light">Deal</label>
+                </div>
+                <div class="col-md-2 navbar-brand">
+                    <input type="radio" name="vrstaPlacanja" value="zamena" id="zamena">
+                    <label for="zamena" class="navbar-brand mx-auto font-weight-bold text-light">Replacement</label>
+                </div>
+                <div class="col-md-2 navbar-brand">
+                    <input type="radio" name="vrstaPlacanja" value="novac" id="novac">
+                    <label for="novac" class="navbar-brand mx-auto font-weight-bold text-light">Money</label>
+                </div>
+            </div>
+
+
+
+
+
+
+            <div class="form-group row d-block">
+                <label for="vrsta" class="col-md-4 col-form-label navbar-brand mx-auto font-weight-bold text-light">Ad type:</label>
+                <select name="vrsta" id="vrsta" class="col-md-4 form-control navbar-brand mx-auto">
+                    <option value="">Choose type</option>
+                    <%if(typeof vrste != 'undefined' && vrste.length > 0){%>
+                    <% for(let vrsta of vrste) {%>
+                    <option value="<%= vrsta.id %>"><%= vrsta.naziv %></option>
+                    <% } %>
+                    <% } %>
+                </select>
+            </div>
+
+
+
+            <div class="novacDiv form-group row d-none" id="novacDiv">
+                <label for="cena" class="col-md-2 col-form-label navbar-brand mx-auto font-weight-bold text-light">Price</label>
+                <input type="text" name="cena" id="cena" class="form-control col-md-2 navbar-brand mx-auto">
+            </div>
+
+            <div class="form-group row d-block">
+                <label for="opis" class="col-md-2 col-form-label navbar-brand mx-auto font-weight-bold text-light">
+                    Description</label>
+            </div>
+
+            <div class="form-group row d-block ">
+                <textarea cols="20" rows="10" class="form-control mx-auto col-md-6" id="opis" name="opis"></textarea>
+            </div>
+
+
+            <button type="submit" id="postaviBtn" class="btn btn-secondary btn-lg mb-3">Place an ad</button>
+            
+    </form>
+
+    <div class="progress w-100 mx-auto">
+        <div style="width: 0%;" class="progress-bar" role='progressbar' aria-valuemin="0" aria-valuemax="100"> 
+            0
+        </div>
+    </div>
+</div>
+<script src="skripte/noviOglas.js"></script>
+</body>
+
+</html>

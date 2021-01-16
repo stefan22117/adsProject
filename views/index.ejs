@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ads</title>
+    <link rel="icon" href="/slike/logo.jpg" type="image/gif" sizes="16x16">
+</head>
+
+
+<body>
+    <%- include("header") %>
+    <%- include("pretraga") %>
+
+
+    <div class="text-center col-md-6 mx-auto rounded py-3" style="background-color: rgba(255, 255, 255, 0.6);">
+
+        <h1>Ads</h1>
+        <a class="btn btn-success btn-lg" href="/noviOglas">New ad</a>
+        <% if(typeof poruka != 'undefined' && poruka != null) {%>
+        <div class="text-success h4 alert alert-light container text-center alert alert-light mt-3">
+            <p><%= poruka %></p>
+        </div>
+        <% } %>
+    </div>
+    <hr class="bg-dark">
+
+
+    <div class="container">
+        <div class="oglasi row">
+            <% if(typeof oglasi != 'undefined' && oglasi != null && oglasi.length > 0) { %>
+            <% var i = 0; %>
+            <% for(let oglas of oglasi){ %>
+            <% var nizSlika = oglas.slika.split(' ').filter(x=>x!='') %>
+            <%if(i<6){%>
+            <div class="col-md-4 oglas">
+                <%i++;%>
+                <%}else{%>
+                <div class="col-md-4 oglas d-none">
+                    <%}%>
+                <div class="card mb-2">
+                    <p style="display: none;" class="oglasId"><%= oglas.id %></p>
+                    <% if(nizSlika.length > 0) {%>
+                    <img src="/slike/<%= nizSlika[0] %>" style="width: 100%; height: 25vh;" class="card-img-top" alt="">
+                    <%} else{%>
+                    <img src="/slike/blanc.png" style="width: 100%; height: 25vh;" class="card-img-top" alt="">
+                    <% } %>
+                    <div class="card-body">
+                        <p class="card-title"><%= oglas.naslov %></p>
+                        <% if(oglas.vrstaPlacanja=="poDogovoru") {%>
+                        <p class="card-text">Deal</p>
+                        <% } %>
+                        <% if(oglas.vrstaPlacanja=="zamena") {%>
+                        <p class="card-text">Replacement</p>
+                        <% } %>
+                        <% if(oglas.vrstaPlacanja=="novac") {%>
+                        <p class="card-text"><%= oglas.cena %></p>
+                        <% } %>
+                    </div>
+
+
+                </div>
+            </div>
+            <%}%>
+            <div class="paginacija container text-center mb-2">
+                <p id="trenutniIndex" class="d-none">1</p>
+                <button class="btn btn-primary btn-lg font-weight-bold levo">
+                    &#10094;
+                </button>
+                <button class="btn btn-primary btn-lg font-weight-bold desno">
+                    &#10095;
+                </button>
+            </div>
+            <script src="/skripte/paginacija.js"></script>
+            <% } else{ %>
+            <div class="poruka text-warning h4 mx-auto alert alert-light">
+                <span>
+                    There are no ads.
+                </span>
+                <span>
+                    <a href="" id="nazad">Back</a>
+                </span>
+            </div>
+
+
+            <% } %>
+
+        </div>
+
+
+
+
+    </div>
+
+
+
+    <script>
+        function oformiOglase() {
+            $('.oglas').click(function () {
+                var id = $(this).find('.oglasId');
+                if (id != undefined) {
+                    id = id.html();
+                    if (id != undefined) {
+                        id = id.trim();
+                    }
+                }
+                else {
+                    id = 0;
+                }
+                location.href = "/oglas/" + id;
+            })
+
+        }
+        oformiOglase();
+        $('#nazad').click(function () {
+            $('#nazad').prop('href', 'javascript:history.back()');
+        })
+    </script>
+</body>
+
+</html>
