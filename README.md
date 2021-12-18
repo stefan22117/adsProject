@@ -5,7 +5,7 @@ rate each other or comment on the ad.
 ## Clone project
 In order to clone project run following command in selected directory
 ```
-git clone http://gitlab/it/adsProject.git
+git clone https://github.com/stefan22117/adsProject.git
 ```
 ## Instalation
 To install all necesery packages listed in **package.json** file, run npm command
